@@ -137,6 +137,27 @@
   .choice-btn[data-active="true"][data-side="yes"]{ background:var(--green); color:white; border-color:var(--green); }
   .choice-btn[data-active="true"][data-side="no"]{ background:var(--red-dark); color:white; border-color:var(--red-dark); }
   .stake-note{ font-family:'Courier Prime',monospace; font-size:12px; color:#5a4a3d; width:100%; }
+  .name-warn{
+    width:100%; font-size:12.5px; color:var(--red-dark);
+    background:#f6d9d9; border:1px solid var(--red); border-radius:3px;
+    padding:7px 10px; display:none;
+  }
+  .name-warn.show{ display:block; }
+  .search-wrap{
+    padding:14px 28px 4px 54px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .search-wrap input{
+    flex:1; padding:9px 12px;
+    border:1px solid var(--line); border-radius:3px;
+    background:#fff; font-family:'Hind Siliguri',sans-serif; font-size:14px;
+  }
+  .search-wrap .clear-search{
+    background:none; border:none; color:#a9998a; cursor:pointer; font-size:14px; padding:4px 8px;
+    display:none;
+  }
+  .search-wrap .clear-search.show{ display:inline-block; }
+  .search-count{ font-size:11.5px; color:#8a7a6a; padding:2px 54px 0 54px; font-family:'Courier Prime',monospace; }
   button.submit{
     padding:10px 22px; background:var(--red); color:#fff; border:none; border-radius:3px;
     font-family:'Tiro Bangla',serif; font-size:15px; cursor:pointer; box-shadow:0 2px 0 var(--red-dark);
@@ -251,6 +272,7 @@
 
   <form id="betForm">
     <input type="text" id="nameInput" placeholder="তোমার নাম লিখো" maxlength="30" required>
+    <div class="name-warn" id="nameWarn"></div>
     <div class="choice-group">
       <button type="button" class="choice-btn" data-side="yes" data-active="false">✅ আসবে</button>
       <button type="button" class="choice-btn" data-side="no" data-active="false">❌ আসবে না</button>
@@ -258,6 +280,12 @@
     <div class="stake-note" id="stakeNote">একটা পক্ষ বেছে নাও — "আসবে" হলে ৳২০০, "আসবে না" হলে ৳১০০</div>
     <button type="submit" class="submit" id="submitBtn" disabled>খাতায় লেখো</button>
   </form>
+
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="🔍 নাম দিয়ে খোঁজো…">
+    <button type="button" class="clear-search" id="clearSearch">✕ পরিষ্কার</button>
+  </div>
+  <div class="search-count" id="searchCount"></div>
 
   <div class="ledger">
     <h2>🤝 ম্যাচড জোড়া — একে অন্যের সাথে বাজি</h2>
@@ -312,6 +340,11 @@ const nameInput = document.getElementById('nameInput');
 const errBox = document.getElementById('errBox');
 const liveDot = document.getElementById('liveDot');
 const myLabel = document.getElementById('myLabel');
+const nameWarn = document.getElementById('nameWarn');
+const searchInput = document.getElementById('searchInput');
+const clearSearchBtn = document.getElementById('clearSearch');
+const searchCountEl = document.getElementById('searchCount');
+let searchQuery = '';
 
 function saveMyEntries(){
   localStorage.setItem('baji_my_entries', JSON.stringify(myEntryIds));
@@ -328,10 +361,39 @@ document.querySelectorAll('.choice-btn').forEach(btn=>{
   });
 });
 
-nameInput.addEventListener('input', validateForm);
-function validateForm(){
-  submitBtn.disabled = !(nameInput.value.trim().length > 0 && selectedSide);
+nameInput.addEventListener('input', ()=>{
+  checkDuplicateName();
+  validateForm();
+});
+function normName(s){ return s.trim().toLowerCase().replace(/\s+/g,' '); }
+function checkDuplicateName(){
+  const val = nameInput.value.trim();
+  if(!val){ nameWarn.classList.remove('show'); return false; }
+  const isDup = entries.some(e => normName(e.name) === normName(val));
+  if(isDup){
+    nameWarn.textContent = `⚠️ "${val}" নামে আগেই একজন বাজি ধরেছে। আলাদা করে চেনার জন্য নামের সাথে পদবি/এলাকা যোগ করো, যেমন "${val} (রাজু)" — নাহলে ম্যাচ আর চ্যাটে কে কে সেটা গুলিয়ে যেতে পারে।`;
+    nameWarn.classList.add('show');
+  }else{
+    nameWarn.classList.remove('show');
+  }
+  return isDup;
 }
+function validateForm(){
+  const dup = checkDuplicateName();
+  submitBtn.disabled = !(nameInput.value.trim().length > 0 && selectedSide) || dup;
+}
+
+searchInput.addEventListener('input', ()=>{
+  searchQuery = normName(searchInput.value);
+  clearSearchBtn.classList.toggle('show', searchQuery.length > 0);
+  render();
+});
+clearSearchBtn.addEventListener('click', ()=>{
+  searchInput.value = '';
+  searchQuery = '';
+  clearSearchBtn.classList.remove('show');
+  render();
+});
 
 function fmtTaka(n){ return '৳' + n.toLocaleString('bn-BD'); }
 function escapeHtml(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
@@ -346,24 +408,40 @@ function updateWhoAmI(){
   myLabel.textContent = myNames.length ? [...new Set(myNames)].join(', ') : 'এখনো কোনো বাজি ধরোনি';
 }
 
+function matchesSearch(name){
+  if(!searchQuery) return true;
+  return normName(name).includes(searchQuery);
+}
+
 function render(){
-  const yes = entries.filter(e=>e.side==='yes').sort((a,b)=>a.ts-b.ts);
-  const no = entries.filter(e=>e.side==='no').sort((a,b)=>a.ts-b.ts);
-  const potYes = yes.reduce((s,e)=>s+e.stake,0);
-  const potNo = no.reduce((s,e)=>s+e.stake,0);
+  const yesAll = entries.filter(e=>e.side==='yes').sort((a,b)=>a.ts-b.ts);
+  const noAll = entries.filter(e=>e.side==='no').sort((a,b)=>a.ts-b.ts);
+  const potYes = yesAll.reduce((s,e)=>s+e.stake,0);
+  const potNo = noAll.reduce((s,e)=>s+e.stake,0);
   potYesEl.textContent = fmtTaka(potYes);
   potNoEl.textContent = fmtTaka(potNo);
-  countYesEl.textContent = yes.length.toLocaleString('bn-BD');
-  countNoEl.textContent = no.length.toLocaleString('bn-BD');
+  countYesEl.textContent = yesAll.length.toLocaleString('bn-BD');
+  countNoEl.textContent = noAll.length.toLocaleString('bn-BD');
 
   const waitingIds = new Set(entries.filter(e=>!e.matched).map(e=>e.id));
 
-  listMatchesEl.innerHTML = matches.length
-    ? matches.map(matchCardHtml).join('')
-    : '<div class="empty">এখনো কোনো জোড়া হয়নি — দুই পক্ষে অন্তত একজন করে দরকার</div>';
+  const yes = yesAll.filter(e=>matchesSearch(e.name));
+  const no = noAll.filter(e=>matchesSearch(e.name));
+  const filteredMatches = matches.filter(m=>matchesSearch(m.yesName) || matchesSearch(m.noName));
 
-  listYesEl.innerHTML = yes.length ? yes.map(e=>rowHtml(e, waitingIds)).join('') : '<div class="empty">এখনো কেউ লেখেনি</div>';
-  listNoEl.innerHTML = no.length ? no.map(e=>rowHtml(e, waitingIds)).join('') : '<div class="empty">এখনো কেউ লেখেনি</div>';
+  if(searchQuery){
+    const total = yes.length + no.length + filteredMatches.length;
+    searchCountEl.textContent = `"${searchInput.value.trim()}" এর জন্য ${total.toLocaleString('bn-BD')} টা ফলাফল পাওয়া গেছে`;
+  }else{
+    searchCountEl.textContent = '';
+  }
+
+  listMatchesEl.innerHTML = filteredMatches.length
+    ? filteredMatches.map(matchCardHtml).join('')
+    : `<div class="empty">${searchQuery ? 'এই নামে কোনো ম্যাচ পাওয়া যায়নি' : 'এখনো কোনো জোড়া হয়নি — দুই পক্ষে অন্তত একজন করে দরকার'}</div>`;
+
+  listYesEl.innerHTML = yes.length ? yes.map(e=>rowHtml(e, waitingIds)).join('') : `<div class="empty">${searchQuery ? 'এই নামে কেউ পাওয়া যায়নি' : 'এখনো কেউ লেখেনি'}</div>`;
+  listNoEl.innerHTML = no.length ? no.map(e=>rowHtml(e, waitingIds)).join('') : `<div class="empty">${searchQuery ? 'এই নামে কেউ পাওয়া যায়নি' : 'এখনো কেউ লেখেনি'}</div>`;
 
   document.querySelectorAll('.del').forEach(btn=>{
     btn.addEventListener('click', async (e)=>{
