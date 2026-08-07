@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>বাজির খাতা — ডিসেম্বর ২০২৬</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #EFE6D2;
+    --paper-dark: #E4D8BC;
+    --ink: #2B1F1A;
+    --red: #8C2F39;
+    --red-dark: #6E2029;
+    --green: #3E5C3A;
+    --gold: #B8923A;
+    --line: #C7B89A;
+    --shadow: rgba(43,31,26,0.18);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background: linear-gradient(180deg, #D8CBA9, #C9BA95);
+    font-family:'Hind Siliguri', sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    padding: 24px 12px 60px;
+  }
+  .book{
+    max-width:640px;
+    margin:0 auto;
+    background:var(--paper);
+    border-radius:4px;
+    box-shadow: 0 2px 0 var(--paper-dark), 0 18px 40px var(--shadow), 0 0 0 1px rgba(43,31,26,0.08);
+    position:relative;
+    overflow:hidden;
+  }
+  .book::after{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0; width:34px;
+    background:repeating-linear-gradient(180deg, var(--red-dark) 0 2px, transparent 2px 14px);
+    opacity:0.5;
+  }
+  header{
+    padding:28px 28px 20px 54px;
+    border-bottom:2px solid var(--line);
+    position:relative;
+  }
+  .eyebrow{
+    font-family:'Courier Prime', monospace;
+    letter-spacing:0.18em;
+    font-size:11px;
+    color:var(--red-dark);
+    text-transform:uppercase;
+    display:flex; align-items:center; gap:6px;
+  }
+  .dot{ width:7px; height:7px; border-radius:50%; background:#8a7a6a; display:inline-block; }
+  .dot.live{ background:var(--green); box-shadow:0 0 0 0 rgba(62,92,58,0.6); animation:pulse 2s infinite; }
+  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(62,92,58,0.5);} 70%{box-shadow:0 0 0 6px rgba(62,92,58,0);} 100%{box-shadow:0 0 0 0 rgba(62,92,58,0);} }
+  h1{
+    font-family:'Tiro Bangla', serif;
+    font-size:32px;
+    margin:6px 0 4px;
+    line-height:1.15;
+  }
+  .sub{ font-size:14px; color:#5a4a3d; }
+  .stamp{
+    position:absolute; top:24px; right:24px;
+    width:78px; height:78px;
+    border:3px solid var(--red);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    transform:rotate(-14deg);
+    color:var(--red);
+    font-family:'Tiro Bangla', serif;
+    font-weight:700;
+    font-size:11px;
+    text-align:center;
+    line-height:1.2;
+    opacity:0.85;
+    mix-blend-mode:multiply;
+    pointer-events:none;
+  }
+  .whoami{
+    padding:10px 28px 10px 54px;
+    background:#fbf6e8;
+    border-bottom:1px solid var(--line);
+    font-size:12.5px; color:#5a4a3d;
+    display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+  }
+  .whoami b{ color:var(--red-dark); }
+  .countdown{
+    display:flex; align-items:baseline; gap:10px;
+    padding:16px 28px 16px 54px;
+    background:var(--paper-dark);
+    border-bottom:2px solid var(--line);
+    font-family:'Courier Prime', monospace;
+  }
+  .countdown .num{ font-size:26px; font-weight:700; color:var(--red-dark); }
+  .countdown .lbl{ font-size:12px; color:#5a4a3d; }
+  .pot{ display:grid; grid-template-columns:1fr 1fr; border-bottom:2px solid var(--line); }
+  .pot > div{ padding:18px 20px; text-align:center; }
+  .pot > div:first-child{ border-right:1px dashed var(--line); }
+  .pot .amt{ font-family:'Courier Prime', monospace; font-size:24px; font-weight:700; }
+  .pot .lbl{ font-size:12px; color:#5a4a3d; margin-top:2px; }
+  .side-yes .amt{ color:var(--green); }
+  .side-no .amt{ color:var(--red-dark); }
+  form{
+    padding:20px 28px 20px 54px;
+    display:flex; flex-wrap:wrap; gap:10px;
+    border-bottom:2px solid var(--line);
+    background:rgba(255,255,255,0.15);
+  }
+  input[type=text]{
+    flex:1 1 160px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:3px;
+    background:var(--paper);
+    font-family:'Hind Siliguri',sans-serif;
+    font-size:15px;
+    color:var(--ink);
+  }
+  input[type=text]:focus{ outline:2px solid var(--gold); outline-offset:1px; }
+  .choice-group{ display:flex; gap:8px; }
+  .choice-btn{
+    flex:1; padding:10px 14px;
+    border:1.5px solid var(--line);
+    border-radius:3px;
+    background:var(--paper);
+    font-family:'Hind Siliguri',sans-serif;
+    font-size:14px;
+    cursor:pointer;
+    transition:all .15s;
+  }
+  .choice-btn[data-active="true"][data-side="yes"]{ background:var(--green); color:white; border-color:var(--green); }
+  .choice-btn[data-active="true"][data-side="no"]{ background:var(--red-dark); color:white; border-color:var(--red-dark); }
+  .stake-note{ font-family:'Courier Prime',monospace; font-size:12px; color:#5a4a3d; width:100%; }
+  button.submit{
+    padding:10px 22px; background:var(--red); color:#fff; border:none; border-radius:3px;
+    font-family:'Tiro Bangla',serif; font-size:15px; cursor:pointer; box-shadow:0 2px 0 var(--red-dark);
+  }
+  button.submit:active{ transform:translateY(2px); box-shadow:none; }
+  button.submit:disabled{ opacity:0.5; cursor:not-allowed; }
+  .ledger{ padding:6px 28px 24px 54px; }
+  .ledger h2{
+    font-family:'Tiro Bangla',serif; font-size:16px; margin:18px 0 8px; color:var(--red-dark);
+    display:flex; align-items:center; gap:8px;
+  }
+  .match-card{
+    padding:12px 14px; margin-bottom:10px;
+    background:var(--paper-dark);
+    border:1px solid var(--line);
+    border-radius:4px;
+    animation: dropIn .25s ease;
+  }
+  .match-card.mine{ border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset; }
+  .match-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .match-side{ display:flex; flex-direction:column; gap:2px; flex:1; }
+  .match-side.yes{ text-align:left; }
+  .match-side.no{ text-align:right; }
+  .match-side .nm{ font-weight:700; font-size:14px; }
+  .match-side.yes .nm{ color:var(--green); }
+  .match-side.no .nm{ color:var(--red-dark); }
+  .match-side .stk{ font-family:'Courier Prime',monospace; font-size:11px; color:#5a4a3d; }
+  .match-vs{
+    font-family:'Tiro Bangla',serif; font-size:12px; color:var(--gold);
+    border:1px solid var(--gold); border-radius:50%;
+    width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; background:var(--paper);
+  }
+  .match-status{
+    margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    font-size:12.5px;
+  }
+  .pay-badge{ font-family:'Courier Prime',monospace; font-size:11px; padding:3px 8px; border-radius:10px; }
+  .pay-badge.closed{ background:#dfe9dc; color:var(--green); }
+  .pay-badge.partial{ background:#f0e6cf; color:var(--gold); }
+  .pay-badge.open{ background:#f6d9d9; color:var(--red-dark); }
+  .mine-actions{ display:flex; align-items:center; gap:8px; }
+  .mini-btn{
+    font-family:'Hind Siliguri',sans-serif; font-size:12px; padding:6px 10px;
+    border:1px solid var(--line); border-radius:3px; background:var(--paper); cursor:pointer;
+  }
+  .mini-btn.paid{ background:var(--green); color:#fff; border-color:var(--green); }
+  .mini-btn.chat{ background:var(--red); color:#fff; border-color:var(--red-dark); }
+  .chat-panel{ margin-top:10px; border-top:1px dashed var(--line); padding-top:10px; display:none; }
+  .chat-panel.open{ display:block; }
+  .chat-msgs{ max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; margin-bottom:8px; padding-right:4px; }
+  .chat-msg{ font-size:13px; padding:6px 10px; border-radius:8px; max-width:85%; background:var(--paper); border:1px solid var(--line); }
+  .chat-msg.me{ align-self:flex-end; background:#e2eede; border-color:#bcd0b6; }
+  .chat-msg .who{ font-family:'Courier Prime',monospace; font-size:10px; color:#8a7a6a; margin-bottom:2px; }
+  .chat-input-row{ display:flex; gap:6px; }
+  .chat-input-row input{ flex:1; padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:13px; background:#fff; }
+  .chat-input-row button{ padding:8px 12px; border:none; border-radius:3px; background:var(--red); color:#fff; cursor:pointer; font-size:13px; }
+  .badge{
+    font-family:'Courier Prime',monospace; font-size:10px;
+    padding:1px 6px; border-radius:8px; margin-left:6px;
+    display:inline-block;
+  }
+  .badge.matched{ background:#dfe9dc; color:var(--green); }
+  .badge.waiting{ background:#f0e6cf; color:var(--gold); }
+  .row{
+    display:flex; justify-content:space-between; align-items:center; padding:9px 0;
+    border-bottom:1px dashed var(--line); font-size:14px; animation: dropIn .25s ease;
+  }
+  @keyframes dropIn{ from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);} }
+  .row .name{ font-weight:600; }
+  .row .meta{ font-family:'Courier Prime',monospace; font-size:12px; color:#5a4a3d; }
+  .row button.del{ background:none; border:none; color:#a9998a; cursor:pointer; font-size:16px; padding:0 4px; }
+  .row button.del:hover{ color:var(--red); }
+  .empty{ font-size:13px; color:#8a7a6a; font-style:italic; padding:8px 0; }
+  footer{ padding:16px 28px 20px 54px; font-size:12px; color:#7a6a5a; border-top:2px solid var(--line); }
+  .err{ margin:12px 28px 0 54px; padding:10px 12px; background:#f6d9d9; border:1px solid var(--red); border-radius:3px; font-size:13px; display:none; }
+  @media (max-width:420px){
+    header{padding-left:38px;} .whoami{padding-left:38px;} .countdown{padding-left:38px;} form{padding-left:38px;} .ledger{padding-left:38px;} footer{padding-left:38px;} .err{margin-left:38px;}
+    .stamp{ width:60px; height:60px; font-size:9px; top:18px; right:16px; }
+    h1{ font-size:24px; }
+  }
+</style>
+</head>
+<body>
+<div class="book">
+  <header>
+    <div class="eyebrow"><span class="dot" id="liveDot"></span> খাতা নং ০১ — Firebase-এ সংরক্ষিত</div>
+    <h1>হাসিনা কি ডিসেম্বরে ফিরবেন?</h1>
+    <div class="sub">যে যা মনে করেন, বাজি ধরে যান খাতায়</div>
+    <div class="stamp">বাজি<br>কনফার্ম</div>
+  </header>
+
+  <div class="whoami">🙋 এই ব্রাউজারে তোমার পরিচয়: <b id="myLabel">এখনো কোনো বাজি ধরোনি</b></div>
+
+  <div class="countdown" id="countdown">
+    <span class="num">—</span><span class="lbl">দিন বাকি ৩১ ডিসেম্বর পর্যন্ত</span>
+  </div>
+
+  <div class="pot">
+    <div class="side-yes">
+      <div class="amt" id="potYes">৳০</div>
+      <div class="lbl">"আসবে" পক্ষের মোট বাজি (<span id="countYes">০</span> জন)</div>
+    </div>
+    <div class="side-no">
+      <div class="amt" id="potNo">৳০</div>
+      <div class="lbl">"আসবে না" পক্ষের মোট বাজি (<span id="countNo">০</span> জন)</div>
+    </div>
+  </div>
+
+  <div class="err" id="errBox"></div>
+
+  <form id="betForm">
+    <input type="text" id="nameInput" placeholder="তোমার নাম লিখো" maxlength="30" required>
+    <div class="choice-group">
+      <button type="button" class="choice-btn" data-side="yes" data-active="false">✅ আসবে</button>
+      <button type="button" class="choice-btn" data-side="no" data-active="false">❌ আসবে না</button>
+    </div>
+    <div class="stake-note" id="stakeNote">একটা পক্ষ বেছে নাও — "আসবে" হলে ৳২০০, "আসবে না" হলে ৳১০০</div>
+    <button type="submit" class="submit" id="submitBtn" disabled>খাতায় লেখো</button>
+  </form>
+
+  <div class="ledger">
+    <h2>🤝 ম্যাচড জোড়া — একে অন্যের সাথে বাজি</h2>
+    <div id="listMatches"><div class="empty">লোড হচ্ছে…</div></div>
+
+    <h2>✅ যারা বলছে আসবে</h2>
+    <div id="listYes"><div class="empty">লোড হচ্ছে…</div></div>
+    <h2>❌ যারা বলছে আসবে না</h2>
+    <div id="listNo"><div class="empty">লোড হচ্ছে…</div></div>
+  </div>
+
+  <footer>
+    এই খাতা সবার সাথে শেয়ার করা — তুমি যা লিখবে, বাকিরাও রিয়েল-টাইমে দেখতে পাবে। যে দুজন ম্যাচড, শুধু তারাই নিজেদের চ্যাট আর পেমেন্ট স্ট্যাটাস দেখবে (এই অ্যাপে লগইন নেই, তাই এটা ব্রাউজার-ভিত্তিক পরিচয় — পুরোপুরি সিকিউর প্রাইভেসি নয়, বন্ধুদের আড্ডার জন্য যথেষ্ট 🙂)
+  </footer>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCgAD4_FefjiGBmwWkVoDB6hWTzhoKjmpw",
+  authDomain: "hassinamagi-65497.firebaseapp.com",
+  projectId: "hassinamagi-65497",
+  storageBucket: "hassinamagi-65497.firebasestorage.app",
+  messagingSenderId: "990342896364",
+  appId: "1:990342896364:web:8811cf9975e5cc4dbfe3c9"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const entriesRef = db.collection('baji_entries');
+const matchesRef = db.collection('matches');
+
+const STAKE = { yes: 200, no: 100 };
+let selectedSide = null;
+let entries = [];
+let matches = [];
+let myEntryIds = JSON.parse(localStorage.getItem('baji_my_entries') || '[]');
+let openChats = new Set();
+const chatUnsubs = {};
+
+const potYesEl = document.getElementById('potYes');
+const potNoEl = document.getElementById('potNo');
+const countYesEl = document.getElementById('countYes');
+const countNoEl = document.getElementById('countNo');
+const listYesEl = document.getElementById('listYes');
+const listNoEl = document.getElementById('listNo');
+const listMatchesEl = document.getElementById('listMatches');
+const stakeNote = document.getElementById('stakeNote');
+const submitBtn = document.getElementById('submitBtn');
+const nameInput = document.getElementById('nameInput');
+const errBox = document.getElementById('errBox');
+const liveDot = document.getElementById('liveDot');
+const myLabel = document.getElementById('myLabel');
+
+function saveMyEntries(){
+  localStorage.setItem('baji_my_entries', JSON.stringify(myEntryIds));
+}
+
+document.querySelectorAll('.choice-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    selectedSide = btn.dataset.side;
+    document.querySelectorAll('.choice-btn').forEach(b=>b.dataset.active = (b===btn));
+    stakeNote.textContent = selectedSide === 'yes'
+      ? 'তুমি বাজি ধরছো: আসবে — বাজির টাকা ৳২০০'
+      : 'তুমি বাজি ধরছো: আসবে না — বাজির টাকা ৳১০০';
+    validateForm();
+  });
+});
+
+nameInput.addEventListener('input', validateForm);
+function validateForm(){
+  submitBtn.disabled = !(nameInput.value.trim().length > 0 && selectedSide);
+}
+
+function fmtTaka(n){ return '৳' + n.toLocaleString('bn-BD'); }
+function escapeHtml(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function showError(msg){
+  errBox.textContent = msg;
+  errBox.style.display = 'block';
+}
+
+function updateWhoAmI(){
+  const myNames = entries.filter(e=>myEntryIds.includes(e.id)).map(e=>e.name);
+  myLabel.textContent = myNames.length ? [...new Set(myNames)].join(', ') : 'এখনো কোনো বাজি ধরোনি';
+}
+
+function render(){
+  const yes = entries.filter(e=>e.side==='yes').sort((a,b)=>a.ts-b.ts);
+  const no = entries.filter(e=>e.side==='no').sort((a,b)=>a.ts-b.ts);
+  const potYes = yes.reduce((s,e)=>s+e.stake,0);
+  const potNo = no.reduce((s,e)=>s+e.stake,0);
+  potYesEl.textContent = fmtTaka(potYes);
+  potNoEl.textContent = fmtTaka(potNo);
+  countYesEl.textContent = yes.length.toLocaleString('bn-BD');
+  countNoEl.textContent = no.length.toLocaleString('bn-BD');
+
+  const waitingIds = new Set(entries.filter(e=>!e.matched).map(e=>e.id));
+
+  listMatchesEl.innerHTML = matches.length
+    ? matches.map(matchCardHtml).join('')
+    : '<div class="empty">এখনো কোনো জোড়া হয়নি — দুই পক্ষে অন্তত একজন করে দরকার</div>';
+
+  listYesEl.innerHTML = yes.length ? yes.map(e=>rowHtml(e, waitingIds)).join('') : '<div class="empty">এখনো কেউ লেখেনি</div>';
+  listNoEl.innerHTML = no.length ? no.map(e=>rowHtml(e, waitingIds)).join('') : '<div class="empty">এখনো কেউ লেখেনি</div>';
+
+  document.querySelectorAll('.del').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      const id = e.currentTarget.dataset.id;
+      try{
+        await entriesRef.doc(id).delete();
+      }catch(err){
+        showError('মুছতে সমস্যা হয়েছে: ' + err.message);
+      }
+    });
+  });
+
+  document.querySelectorAll('.mini-btn.paid').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      const matchId = e.currentTarget.dataset.matchId;
+      const field = e.currentTarget.dataset.field;
+      try{
+        await matchesRef.doc(matchId).update({ [field]: true });
+      }catch(err){
+        showError('পেমেন্ট আপডেট করতে সমস্যা: ' + err.message);
+      }
+    });
+  });
+
+  document.querySelectorAll('.mini-btn.chat').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      const matchId = e.currentTarget.dataset.matchId;
+      toggleChat(matchId);
+    });
+  });
+
+  document.querySelectorAll('.chat-input-row').forEach(row=>{
+    const matchId = row.dataset.matchId;
+    const input = row.querySelector('input');
+    const sendBtn = row.querySelector('button');
+    const send = async ()=>{
+      const text = input.value.trim();
+      if(!text) return;
+      const myName = myNameForMatch(matchId);
+      try{
+        await matchesRef.doc(matchId).collection('messages').add({
+          sender: myName || 'অজানা',
+          text,
+          ts: Date.now()
+        });
+        input.value = '';
+      }catch(err){
+        showError('মেসেজ পাঠাতে সমস্যা: ' + err.message);
+      }
+    };
+    sendBtn.addEventListener('click', send);
+    input.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter') send(); });
+  });
+
+  updateWhoAmI();
+}
+
+function myNameForMatch(matchId){
+  const m = matches.find(x=>x.id===matchId);
+  if(!m) return null;
+  if(myEntryIds.includes(m.yesId)) return m.yesName;
+  if(myEntryIds.includes(m.noId)) return m.noName;
+  return null;
+}
+
+function paymentBadge(m){
+  if(m.paidYes && m.paidNo) return '<span class="pay-badge closed">✅ ডিল ক্লোজড — দুজনেই পরিশোধ করেছে</span>';
+  if(m.paidYes || m.paidNo) return '<span class="pay-badge partial">⏳ একপক্ষ পরিশোধ করেছে, অন্যজন বাকি</span>';
+  return '<span class="pay-badge open">❌ এখনো কেউ পরিশোধ করেনি</span>';
+}
+
+function matchCardHtml(m){
+  const isMine = myEntryIds.includes(m.yesId) || myEntryIds.includes(m.noId);
+  const myIsYes = myEntryIds.includes(m.yesId);
+  const myIsNo = myEntryIds.includes(m.noId);
+  const chatOpen = openChats.has(m.id);
+
+  let actions = '';
+  if(isMine){
+    const myPaidField = myIsYes ? 'paidYes' : 'paidNo';
+    const myAlreadyPaid = myIsYes ? m.paidYes : m.paidNo;
+    actions = `<div class="mine-actions">
+      <button class="mini-btn paid${myAlreadyPaid ? ' paid' : ''}" data-match-id="${m.id}" data-field="${myPaidField}" ${myAlreadyPaid ? 'disabled' : ''}>
+        ${myAlreadyPaid ? '✅ পরিশোধ করেছি' : 'আমি পরিশোধ করেছি'}
+      </button>
+      <button class="mini-btn chat" data-match-id="${m.id}">💬 চ্যাট</button>
+    </div>`;
+  }
+
+  const chatPanel = isMine ? `
+    <div class="chat-panel${chatOpen ? ' open' : ''}" id="chat-${m.id}">
+      <div class="chat-msgs" id="chat-msgs-${m.id}"><div class="empty">লোড হচ্ছে…</div></div>
+      <div class="chat-input-row" data-match-id="${m.id}">
+        <input type="text" placeholder="মেসেজ লেখো…" maxlength="300">
+        <button type="button">পাঠাও</button>
+      </div>
+    </div>` : '';
+
+  return `<div class="match-card${isMine ? ' mine' : ''}">
+    <div class="match-top">
+      <div class="match-side yes">
+        <span class="nm">${escapeHtml(m.yesName)}</span>
+        <span class="stk">✅ আসবে · ${fmtTaka(m.yesStake)}</span>
+      </div>
+      <div class="match-vs">VS</div>
+      <div class="match-side no">
+        <span class="nm">${escapeHtml(m.noName)}</span>
+        <span class="stk">❌ আসবে না · ${fmtTaka(m.noStake)}</span>
+      </div>
+    </div>
+    <div class="match-status">
+      ${paymentBadge(m)}
+      ${actions}
+    </div>
+    ${chatPanel}
+  </div>`;
+}
+
+function toggleChat(matchId){
+  if(openChats.has(matchId)){
+    openChats.delete(matchId);
+    if(chatUnsubs[matchId]){ chatUnsubs[matchId](); delete chatUnsubs[matchId]; }
+  }else{
+    openChats.add(matchId);
+    subscribeChat(matchId);
+  }
+  render();
+}
+
+function subscribeChat(matchId){
+  if(chatUnsubs[matchId]) return;
+  chatUnsubs[matchId] = matchesRef.doc(matchId).collection('messages').orderBy('ts','asc')
+    .onSnapshot((snap)=>{
+      const el = document.getElementById('chat-msgs-' + matchId);
+      if(!el) return;
+      const myName = myNameForMatch(matchId);
+      const msgs = snap.docs.map(d=>d.data());
+      el.innerHTML = msgs.length ? msgs.map(msg=>`
+        <div class="chat-msg${msg.sender===myName ? ' me' : ''}">
+          <div class="who">${escapeHtml(msg.sender)}</div>
+          ${escapeHtml(msg.text)}
+        </div>`).join('') : '<div class="empty">এখনো কোনো মেসেজ নেই — প্রথম মেসেজটা লিখো</div>';
+      el.scrollTop = el.scrollHeight;
+    }, (err)=>{
+      showError('চ্যাট লোড করতে সমস্যা: ' + err.message);
+    });
+}
+
+function rowHtml(e, waitingIds){
+  const badge = waitingIds.has(e.id)
+    ? '<span class="badge waiting">অপেক্ষায়</span>'
+    : '<span class="badge matched">ম্যাচড</span>';
+  return `<div class="row">
+    <div><div class="name">${escapeHtml(e.name)}${badge}</div></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="meta">${fmtTaka(e.stake)}</span>
+      <button class="del" data-id="${e.id}" title="মুছে ফেলো">✕</button>
+    </div>
+  </div>`;
+}
+
+// Real-time listeners — everyone who opens this page sees live updates
+entriesRef.orderBy('ts', 'asc').onSnapshot(
+  (snapshot)=>{
+    entries = snapshot.docs.map(doc=>({ id: doc.id, ...doc.data() }));
+    liveDot.classList.add('live');
+    render();
+  },
+  (err)=>{
+    showError('Firestore থেকে ডেটা আনতে সমস্যা: ' + err.message + ' — সিকিউরিটি রুল বা কনফিগ চেক করো।');
+  }
+);
+
+matchesRef.orderBy('ts', 'asc').onSnapshot(
+  (snapshot)=>{
+    matches = snapshot.docs.map(doc=>({ id: doc.id, ...doc.data() }));
+    render();
+  },
+  (err)=>{
+    showError('ম্যাচ লোড করতে সমস্যা: ' + err.message);
+  }
+);
+
+// When a new entry is added, try to pair it with the earliest unmatched entry on the opposite side
+async function tryMatch(newEntryId, newEntryData){
+  const oppositeSide = newEntryData.side === 'yes' ? 'no' : 'yes';
+  try{
+    // Find a candidate outside the transaction — compat SDK transactions only support
+    // reading a specific DocumentReference via tx.get(), not a Query.
+    const q = await entriesRef.where('side','==',oppositeSide).where('matched','==',false).orderBy('ts','asc').limit(1).get();
+    if(q.empty) return;
+    const candidateRef = q.docs[0].ref;
+
+    await db.runTransaction(async (tx)=>{
+      const oppSnap = await tx.get(candidateRef);
+      if(!oppSnap.exists || oppSnap.data().matched){
+        return; // someone else already matched this entry in the meantime
+      }
+      const oppData = oppSnap.data();
+      const matchRef = matchesRef.doc();
+      const yesEntry = newEntryData.side === 'yes' ? { id:newEntryId, ...newEntryData } : { id:candidateRef.id, ...oppData };
+      const noEntry  = newEntryData.side === 'no'  ? { id:newEntryId, ...newEntryData } : { id:candidateRef.id, ...oppData };
+      tx.set(matchRef, {
+        yesId: yesEntry.id, yesName: yesEntry.name, yesStake: yesEntry.stake,
+        noId: noEntry.id, noName: noEntry.name, noStake: noEntry.stake,
+        paidYes: false, paidNo: false, ts: Date.now()
+      });
+      tx.update(entriesRef.doc(newEntryId), { matched:true, matchId: matchRef.id });
+      tx.update(candidateRef, { matched:true, matchId: matchRef.id });
+    });
+  }catch(err){
+    // If a composite index is missing, Firestore's error includes a console link to create it
+    showError('অটো-ম্যাচ করতে সমস্যা হয়েছে: ' + err.message);
+  }
+}
+
+document.getElementById('betForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const name = nameInput.value.trim();
+  if(!name || !selectedSide) return;
+  submitBtn.disabled = true;
+  try{
+    const entryData = {
+      name,
+      side: selectedSide,
+      stake: STAKE[selectedSide],
+      ts: Date.now(),
+      matched: false,
+      matchId: null
+    };
+    const docRef = await entriesRef.add(entryData);
+    myEntryIds.push(docRef.id);
+    saveMyEntries();
+    await tryMatch(docRef.id, entryData);
+
+    nameInput.value = '';
+    selectedSide = null;
+    document.querySelectorAll('.choice-btn').forEach(b=>b.dataset.active = "false");
+    stakeNote.textContent = 'একটা পক্ষ বেছে নাও — "আসবে" হলে ৳২০০, "আসবে না" হলে ৳১০০';
+  }catch(err){
+    showError('লিখতে সমস্যা হয়েছে: ' + err.message);
+  }
+  validateForm();
+});
+
+function updateCountdown(){
+  const now = new Date();
+  const target = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
+  if(target < now) target.setFullYear(target.getFullYear()+1);
+  const diff = target - now;
+  const days = Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+  document.querySelector('.countdown .num').textContent = days.toLocaleString('bn-BD');
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000*60*60);
+</script>
+</body>
+</html>
